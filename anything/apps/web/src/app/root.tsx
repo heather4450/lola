@@ -206,7 +206,7 @@ function InternalErrorBoundary({ error: errorArg }: Route.ErrorBoundaryProps) {
                 </div>
 
                 <button
-                  className={`flex flex-row items-center justify-center gap-[4px] outline-none transition-colors rounded-[8px] border-[1px] bg-[#2C2D2F] hover:bg-[#414243] active:bg-[#555658] border-[#414243] text-white ${copyButtonTextClass} ${copyButtonPaddingClass} w-fit`}
+                  className={`flex flex-row items-center justify-center gap-[4px] outline-none transition-colors rounded-[8px] border-[1px] bg-[#2C2D2F] hover:bg-[#414243] active:bg-[#555658] bor[...]
                   type="button"
                   {...copyButtonProps}
                 >
@@ -296,7 +296,7 @@ export function useHmrConnection(): boolean {
     import.meta.hot.on('vite:ws:disconnect', onDisconnect);
     import.meta.hot.on('vite:ws:connect', onConnect);
 
-    // Optional: catch the “about to full‑reload” event as a last resort
+    // Optional: catch the "about to full‑reload" event as a last resort
     const onFullReload = () => setConnected(false);
     import.meta.hot.on('vite:beforeFullReload', onFullReload);
 
@@ -402,6 +402,7 @@ export const useHandleScreenshotRequest = () => {
     };
   }, []);
 };
+
 export function Layout({ children }: { children: ReactNode }) {
   useHandshakeParent();
   useHandleScreenshotRequest();
@@ -438,7 +439,8 @@ export function Layout({ children }: { children: ReactNode }) {
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <meta name="theme-color" content="#0B0B0F" />
         <Meta />
         <Links />
         <script type="module" src="/src/__create/dev-error-overlay.js"></script>
@@ -452,6 +454,8 @@ export function Layout({ children }: { children: ReactNode }) {
         <Scripts />
         <link rel="preconnect" href="https://ka-p.fontawesome.com" crossOrigin="anonymous" />
         <link rel="stylesheet" href="https://ka-p.fontawesome.com/releases/v6.3.0/css/pro.min.css?token=2c15cc0cc7" crossOrigin="anonymous" />
+        {/* 🎯 Telegram WebApp Script - LOADED AT END OF BODY */}
+        <script src="https://telegram.org/js/telegram-web-app.js" />
       </body>
     </html>
   );
