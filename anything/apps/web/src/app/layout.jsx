@@ -14,8 +14,11 @@ const queryClient = new QueryClient({
 export default function RootLayout({ children }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <html>
+      <html lang="en">
         <head>
+          <meta charSet="utf-8" />
+          <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+          <meta name="theme-color" content="#0B0B0F" />
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link
             rel="preconnect"
@@ -26,17 +29,15 @@ export default function RootLayout({ children }) {
             href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
             rel="stylesheet"
           />
-          {/* Load Telegram WebApp script FIRST with defer */}
-          <script 
-            src="https://telegram.org/js/telegram-web-app.js"
-            defer
-            async
-          />
           <style>{`
             * { box-sizing: border-box; margin: 0; padding: 0; }
-            body {
+            html, body, #__next {
+              width: 100%;
+              height: 100%;
               background: #0B0B0F;
               color: #ffffff;
+            }
+            body {
               font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
               -webkit-font-smoothing: antialiased;
               -moz-osx-font-smoothing: grayscale;
@@ -53,6 +54,8 @@ export default function RootLayout({ children }) {
         </head>
         <body>
           {children}
+          {/* Telegram WebApp script - LOAD AFTER HTML, NO DEFER/ASYNC */}
+          <script src="https://telegram.org/js/telegram-web-app.js" />
         </body>
       </html>
     </QueryClientProvider>
