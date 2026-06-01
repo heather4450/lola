@@ -41,6 +41,16 @@ export async function GET(request) {
     );
   }
 
+  // Validate secret_token contains only allowed characters
+  const allowedCharactersRegex = /^[A-Za-z0-9_-]+$/;
+  if (!allowedCharactersRegex.test(webhookSecret)) {
+    console.error(`[bot/register] Invalid secret_token characters:`, webhookSecret);
+    return html(
+      `❌ TELEGRAM_WEBHOOK_SECRET contains invalid characters!\n\nAllowed: A-Z, a-z, 0-9, underscore (_), dash (-)\n\nCurrent value: "${webhookSecret}"\n\nUpdate it in the Secrets panel and try again.`,
+      false,
+    );
+  }
+
   const webhookUrl = `${appUrl}/api/bot/webhook`;
 
   try {
@@ -55,20 +65,32 @@ export async function GET(request) {
     }
 
     // 2. Register webhook
+    const payloadBody = JSON.stringify({
+      url: webhookUrl,
+      secret_token: webhookSecret,
+      allowed_updates: ["message", "edited_message"],
+      drop_pending_updates: true,
+    });
+
+    console.log("[bot/register] Sending webhook payload:", {
+      url: webhookUrl,
+      secret_token: webhookSecret,
+      secret_token_length: webhookSecret.length,
+      secret_token_chars: webhookSecret.split('').map(c => `${c}(${c.charCodeAt(0)})`).join(', '),
+    });
+
     const setRes = await fetch(
       `https://api.telegram.org/bot${botToken}/setWebhook`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          url: webhookUrl,
-          secret_token: webhookSecret,
-          allowed_updates: ["message", "edited_message"],
-          drop_pending_updates: true,
-        }),
+        body: payloadBody,
       },
     );
     const setData = await setRes.json();
+    
+    console.log("[bot/register] Telegram setWebhook response:", setData);
+    
     if (!setData.ok) {
       return html(`❌ Telegram error: ${setData.description}`, false);
     }
